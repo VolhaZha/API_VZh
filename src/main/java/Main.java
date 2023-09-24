@@ -1,19 +1,20 @@
-import util.ReadWriteRequests;
-import util.TokenManager;
+import com.coherentsolutions.training.aqa.java.api.zhavrid.util.ReadWriteRequests;
+import com.coherentsolutions.training.aqa.java.api.zhavrid.util.TokenManager;
+
+import java.util.logging.Logger;
 
 public class Main {
 
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
-        ReadWriteRequests readWriteRequests = new ReadWriteRequests();
-
         String writeToken = TokenManager.getInstance().getWriteScopeToken();
-        System.out.println("Write Token: " + writeToken);
+        logger.info("Write Token: " + writeToken);
+        ReadWriteRequests.writeRequest(writeToken);
 
         String readToken = TokenManager.getInstance().getReadScopeToken();
-        System.out.println("Read Token: " + readToken);
+        logger.info("Read Token: " + readToken);
+        ReadWriteRequests.readRequest(readToken);
 
-        readWriteRequests.makeWriteRequest(writeToken);
-        readWriteRequests.makeReadRequest(readToken);
     }
 }
 

@@ -1,7 +1,5 @@
-package util;
+package com.coherentsolutions.training.aqa.java.api.zhavrid.util;
 
-import constants.TestDataConstants;
-import constants.UrlConstants;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -65,13 +63,19 @@ public class TokenManager {
     }
 
     private String retrieveToken(String scope) {
+        int port = Integer.parseInt(PropertiesFileReader.getProperty(PropertyKey.PORT));
+        String user = PropertiesFileReader.getProperty(PropertyKey.DEFAULT_USER);
+        String pass = PropertiesFileReader.getProperty(PropertyKey.DEFAULT_PASS);
+        String uri = PropertiesFileReader.getProperty(PropertyKey.URI);
+
+
         try {
-            final HttpHost targetHost = new HttpHost("localhost", TestDataConstants.PORT, "http");
+            final HttpHost targetHost = new HttpHost("localhost", port, "http");
             final BasicCredentialsProvider provider = new BasicCredentialsProvider();
             AuthScope authScope = new AuthScope(targetHost);
-            provider.setCredentials(authScope, new UsernamePasswordCredentials(TestDataConstants.DEFAULT_USER, TestDataConstants.DEFAULT_PASS));
+            provider.setCredentials(authScope, new UsernamePasswordCredentials(user, pass));
 
-            HttpPost request = new HttpPost(UrlConstants.URI);
+            HttpPost request = new HttpPost(uri);
             List<BasicNameValuePair> parameters = new ArrayList<>();
             parameters.add(new BasicNameValuePair("grant_type", "client_credentials"));
             parameters.add(new BasicNameValuePair("scope", scope));
@@ -93,8 +97,8 @@ public class TokenManager {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to retrieve token due to an IOException.", e);
         }
-        return null;
+        throw new RuntimeException("Failed to retrieve token for an unknown reason.");
     }
 }
